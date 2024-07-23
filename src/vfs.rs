@@ -465,9 +465,8 @@ impl DavFileSystem for AliyunDriveFileSystem {
                 .get_file(to.parent().unwrap().to_path_buf())
                 .await?
                 .ok_or(FsError::NotFound)?;
-            let new_name = to_dav.file_name();
             self.drive
-                .copy_file(&file.id, &to_parent_file.id, new_name)
+                .copy_file(&file.id, &to_parent_file.id)
                 .await
                 .map_err(|err| {
                     error!(from = %from.display(), to = %to.display(), error = %err, "copy file failed");
@@ -709,7 +708,11 @@ impl AliyunDavFile {
                     FsError::GeneralFailure
                 })?;
             self.file.id = res.file_id.clone();
-            self.upload_state.upload_id = res.upload_id.clone();
+            let Some(upload_id) = res.upload_id else {
+                error!("create file with proof failed: missing upload_id");
+                return Err(FsError::GeneralFailure);
+            };
+            self.upload_state.upload_id = upload_id;
             let upload_urls: Vec<_> = res
                 .part_info_list
                 .into_iter()
@@ -958,7 +961,7 @@ impl DavFile for AliyunDavFile {
         async move {
             let new_pos = match pos {
                 SeekFrom::Start(pos) => pos,
-                SeekFrom::End(pos) => (self.file.size as i64 - pos) as u64,
+                SeekFrom::End(pos) => (self.file.size as i64 + pos) as u64,
                 SeekFrom::Current(size) => self.current_pos + size as u64,
             };
             self.current_pos = new_pos;

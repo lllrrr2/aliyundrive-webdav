@@ -29,6 +29,12 @@ port = e:option(Value, "port", translate("Port"))
 port.default = "8080"
 port.datatype = "port"
 
+drive_type = e:option(ListValue, "drive_type", translate("Aliyun drive type"))
+drive_type.description = translate("Supports drive type: resource, backup")
+drive_type:value("resource", "resource");
+drive_type:value("backup", "backup");
+drive_type.default = "backup"
+
 tls_cert = e:option(Value, "tls_cert", translate("TLS certificate file path"))
 tls_key = e:option(Value, "tls_key", translate("TLS private key file path"))
 
@@ -43,6 +49,10 @@ read_buffer_size.datatype = "uinteger"
 prefer_http_download = e:option(Flag, "prefer_http_download", translate("Prefer HTTP Download"))
 prefer_http_download.description = translate("Prefer downloading files using HTTP instead of HTTPS protocol")
 prefer_http_download.rmempty = false
+
+redirect = e:option(Flag, "redirect", translate("Enable 302 Redirect"))
+redirect.description = translate("Enable 302 redirect when possible")
+redirect.rmempty = false
 
 upload_buffer_size = e:option(Value, "upload_buffer_size", translate("Upload Buffer Size"))
 upload_buffer_size.default = "16777216"

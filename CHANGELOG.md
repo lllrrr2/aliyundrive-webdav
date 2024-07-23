@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.3.0
+
+* 增加资源库支持
+
+## 2.1.0
+
+* 增加 `--redirect` 参数用于启用 302 重定向
+
+## 2.0.0
+
+* 切换到阿里云盘开放平台接口
+* 移除 Koolshare 梅林固件路由器平台支持
+
 ## 1.11.0
 
 * 移除阿里云 PDS 服务支持
